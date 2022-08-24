@@ -1,7 +1,11 @@
 import { useNetwork } from "wagmi";
+import useAppContractsConf, {
+  ContractConf,
+} from "../hooks/useContractAddresses";
 
 export type WithLiveContractsProps = {
   chainId: number;
+  contracts: ContractConf;
 };
 
 function withLiveContracts<T extends WithLiveContractsProps>(
@@ -12,17 +16,24 @@ function withLiveContracts<T extends WithLiveContractsProps>(
   const ComponentWithLiveContracts = (
     props: Omit<T, keyof WithLiveContractsProps>
   ) => {
-    const { activeChain } = useNetwork();
+    const contracts = useAppContractsConf();
+    const { chain } = useNetwork();
 
-    if (activeChain?.unsupported) {
+    if (chain?.unsupported) {
       return <p>Chain unsupported</p>;
     }
 
-    if (!activeChain?.id) {
+    if (!chain?.id) {
       return <p>Not active network</p>;
     }
 
-    return <WrappedComponent {...(props as T)} chainId={activeChain.id} />;
+    return (
+      <WrappedComponent
+        {...(props as T)}
+        chainId={chain.id}
+        contracts={contracts[chain.id]}
+      />
+    );
   };
 
   ComponentWithLiveContracts.displayName = `withLiveContracts(${displayName})`;

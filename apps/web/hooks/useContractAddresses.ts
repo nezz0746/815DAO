@@ -1,29 +1,19 @@
 import HardhatGreeter from "../artifacts/hardhat/Greeter.json";
 import MumbaiGreeter from "../artifacts/mumbai/Greeter.json";
 
-export type EthConf = {
+export type ContractConf = {
   abi: any;
   address: string;
 };
 
-export type EthAppConfig = {
-  Greeter: EthConf;
-};
+export type AppContractConf = {};
 
-const useAppContractsConf = (): Record<number, EthAppConfig> => {
+const useAppContractsConf = (): Record<number, AppContractConf> => {
   return {
-    31337: {
-      Greeter: {
-        abi: HardhatGreeter.abi,
-        address: HardhatGreeter.address,
-      },
-    },
-    80001: {
-      Greeter: {
-        abi: MumbaiGreeter.abi,
-        address: MumbaiGreeter.address,
-      },
-    },
+    31337: {},
+    80001: {},
+    1: {},
+    5: {},
   };
 };
 

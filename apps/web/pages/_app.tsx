@@ -15,7 +15,7 @@ const { chains, provider } = configureChains(
       ? [chain.hardhat, chain.polygonMumbai]
       : []),
   ],
-  [alchemyProvider({ alchemyId: process.env.ALCHEMY_ID }), publicProvider()]
+  [alchemyProvider({ apiKey: process.env.ALCHEMY_ID }), publicProvider()]
 );
 
 const { connectors } = getDefaultWallets({
