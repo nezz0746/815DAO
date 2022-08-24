@@ -1,50 +1,11 @@
-# 🔌 ETH Basic Typescript Starter
+# 815DAO ✈️ 🏝️ 🐻‍❄️
 
-### ✨ New version ✨
+Contains snapshot & script for all ERC721 holders with tokenID 815
 
-(Older version available [here](https://github.com/nezz0746/typescript-eth-starter/tree/12d7cd88a70251b134abea7ea7c0666aa2142de0))
+Based on Datanexus.eth [subgraph](https://thegraph.com/explorer/subgraph?id=B333F7Ra4kuVBSwHFDfH9x9N1341GYHvdfpV94KY8Gmv&view=Overview)
 
-This monorepo should allow you to get started with a simple Greeter smart contract on your local hardhat netowrk and Polygon testnet (Mumbai) in record time with this basic react stack using
+To run the snapshot, first setup your the graph API_KEY in `.env` file then run:
 
-- React / Typescript (NextJS)
-- 🏎️  [Turborepo](https://turborepo.org/)
-- 👷 [Hardhat](https://hardhat.org/), with tests & plugings setup:
-  - hardhat-deploy
-  - hardhat-gas-reporter
-- 🚀 [wagmi](https://wagmi.sh/) & 🌈 [RainbowKit](https://www.rainbowkit.com/) !
-- [Tailwind CSS](https://tailwindcss.com/) with [DaisyUI](https://daisyui.com/) 🌼 ! 
-
-## Get Started
-
-Install dependencies
-
+```bash
+npm run snapshot:take
 ```
-npm install
-```
-
-The repo consists of 2 apps **ethereum** (hardhat project) & your **web** app. Running
-
-```
-npm run dev
-```
-
-will concurrently:
-
-- start your local chain
-- compile contracts
-- deploy contracts locally as described by the hardhat-deploy plugin
-- start your web app on port 3000
-
-```
-/apps
-  /ethereum
-  /web
-  [...]
-/packages
-  /types
-  [...]
-```
-
-### Tests
-
-Test your project with `npm run test`.

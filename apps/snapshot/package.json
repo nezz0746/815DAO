@@ -5,8 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "node index.js",
-    "test": "node --experimental-json-modules test.js"
+    "snapshot:take": "node ./index"
   },
   "author": "",
   "license": "ISC",
