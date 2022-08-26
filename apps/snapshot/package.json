@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "snapshot:take": "node ./index"
+    "snapshot:addresses": "node --experimental-json-modules ./src/take.js"
   },
   "author": "",
   "license": "ISC",
