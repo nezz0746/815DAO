@@ -5,6 +5,8 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Base64.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 import {Errors} from "./Errors.sol";
 import {Structs} from "./Structs.sol";
@@ -60,10 +62,31 @@ contract OceanicTicketsFromSydneyToLAX is ERC721, Ownable {
         return baseURI;
     }
 
-    function _displayTicket(uint128 id) internal {
+    function tokenURI(uint256 tokenId)
+        public
+        view
+        override
+        returns (string memory)
+    {
+        string memory json = Base64.encode(
+            bytes(
+                string(
+                    abi.encodePacked(
+                        '{"name": "MY NFT", "description": "", "image": "',
+                        bytes(_displayTicket(tokenId)),
+                        '"}'
+                    )
+                )
+            )
+        );
+        return string(abi.encodePacked("data:application/json;base64,", json));
+    }
+
+    function _displayTicket(uint256 id) internal view returns (string memory) {
         return
             string(
                 abi.encodePacked(
+                    "data:image/svg+xml;utf8,",
                     "<svg width='100%' height='100%' viewBox='0 0 2700 2700' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xml:space='preserve' xmlns:serif='http://www.serif.com/' style='fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;'>",
                     "<g transform='matrix(1.37906,0,0,1.2053,-684.646,-252.854)'>",
                     "<path d='M2653,233.815C2653,131.261 2569.26,48 2466.11,48L222.886,48C119.741,48 36,131.261 36,233.815C36,233.964 36,2468.18 36,2468.18C36,2570.74 119.741,2654 222.886,2654L2466.11,2654C2569.26,2654 2653,2570.74 2653,2468.18L2653,233.815Z' style='fill:url(#_Linear1);'/>",
@@ -156,13 +179,17 @@ contract OceanicTicketsFromSydneyToLAX is ERC721, Ownable {
                     "<text x='1091.98px' y='1693.96px' style='font-family:'PTMono-Regular', 'PT Mono', monospace;font-size:150px;fill:url(#_Linear4);'>Flight:</text>",
                     string(
                         abi.encodePacked(
-                            "<text x='1633.48px' y='1693.96px' style='font-family:'PTMono-Regular', 'PT Mono', monospace;font-size:150px;fill:url(#_Linear6);'>12</text>"
+                            "<text x='1633.48px' y='1693.96px' style='font-family:'PTMono-Regular', 'PT Mono', monospace;font-size:150px;fill:url(#_Linear6);'>",
+                            Strings.toString(id / flight.capacity),
+                            "</text>"
                         )
                     ),
-                    "<text x='2353.48px' y='1693.96px' style='font-family:'PTMono-Regular', 'PT Mono', monospace;font-size:150px;fill:url(#_Linear7);'>Seat n°:</text>",
+                    "<text x='2353.48px' y='1693.96px' style='font-family:'PTMono-Regular', 'PT Mono', monospace;font-size:150px;fill:url(#_Linear7);'>Seat n:</text>",
                     string(
                         abi.encodePacked(
-                            "<text x='2531.98px' y='1693.96px' style='font-family:'PTMono-Regular', 'PT Mono', monospace;font-size:150px;fill:url(#_Linear8);'>321</text>"
+                            "<text x='2531.98px' y='1693.96px' style='font-family:'PTMono-Regular', 'PT Mono', monospace;font-size:150px;fill:url(#_Linear8);'>",
+                            Strings.toString(id % flight.capacity),
+                            "</text>"
                         )
                     ),
                     "</g>",
