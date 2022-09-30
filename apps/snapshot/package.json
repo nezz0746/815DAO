@@ -12,8 +12,11 @@
   "dependencies": {
     "crypto-js": "^4.1.1",
     "dotenv": "^16.0.1",
+    "ethers": "^5.7.1",
     "graphql": "^16.6.0",
     "graphql-request": "^4.3.0",
+    "keccak256": "^1.0.6",
+    "lodash": "^4.17.21",
     "merkletreejs": "^0.2.32"
   }
 }

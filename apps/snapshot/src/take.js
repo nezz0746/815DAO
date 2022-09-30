@@ -1,9 +1,12 @@
 import { GraphQLClient } from "graphql-request";
 import { MerkleTree } from "merkletreejs";
+import keccak256 from "keccak256";
 import SHA256 from "crypto-js/sha256.js";
 import fs from "fs/promises";
 import "dotenv/config";
 import contractsTreeJSON from "../artifacts/contractsTree.json" assert { type: "json" };
+import _ from "lodash";
+import { ethers } from "ethers";
 
 const { root: addressesRoot, leaves: addressesList } = contractsTreeJSON;
 
@@ -46,37 +49,65 @@ const main = async () => {
   }
   const contractsTree = new MerkleTree(addressesList, SHA256);
 
-  const data = allTokens
-    .filter((token, index) => {
-      console.log(index);
-      const leaf = SHA256(token.id.split("/")[1]);
-      return contractsTree.verify(
-        contractsTree.getProof(leaf),
-        leaf,
-        addressesRoot
-      );
-    })
-    .map((token) => token.owner.id);
+  const userAddresses = _.uniq(
+    allTokens
+      .filter((token, index) => {
+        // Token must be in the contracts tree
+        console.log(index);
+        const leaf = SHA256(token.id.split("/")[1]); // address
+        return contractsTree.verify(
+          contractsTree.getProof(leaf),
+          leaf,
+          addressesRoot
+        );
+      })
+      .map((token) => token.owner.id)
+  );
 
-  const leaves = data.map((x) => SHA256(x));
-
-  const tree = new MerkleTree(leaves, SHA256);
-
-  await fs.writeFile(
-    "./tree.json",
-    JSON.stringify(
+  const unsortedLeaves = userAddresses.map((x) => keccak256(x));
+  const tree = new MerkleTree(unsortedLeaves, keccak256, { sort: true });
+  const testTree = new MerkleTree(unsortedLeaves.slice(0, 10), keccak256, {
+    sort: true,
+  });
+  [
+    [
+      "registry.json",
+      {
+        userAddresses,
+      },
+    ],
+    [
+      "registry.test.json",
+      {
+        userAddresses: userAddresses
+          .slice(0, 10)
+          .map((add) => ethers.utils.getAddress(add)),
+      },
+    ],
+    [
+      "tree.json",
       {
         name: "815DAO",
         timestamp: Date.now(),
-        supplyBeyondContractSnapshot: allTokens.length,
-        supply: data.length,
         root: tree.getHexRoot(),
         leaves: tree.getHexLeaves(),
       },
-      null,
-      2
-    )
-  );
+    ],
+    [
+      "tree.test.json",
+      {
+        name: "815DAO-test",
+        timestamp: Date.now(),
+        root: testTree.getHexRoot(),
+        leaves: testTree.getHexLeaves(),
+      },
+    ],
+  ].forEach(async ([filename, data]) => {
+    await fs.writeFile(
+      `./artifacts/${filename}`,
+      JSON.stringify(data, null, 2)
+    );
+  });
 };
 
 main();

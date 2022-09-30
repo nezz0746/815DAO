@@ -4,3 +4,9 @@
 [submodule "apps/blockchain/lib/openzeppelin-contracts"]
 	path = apps/blockchain/lib/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "apps/blockchain/lib/murky"]
+	path = apps/blockchain/lib/murky
+	url = https://github.com/dmfxyz/murky
+[submodule "apps/blockchain/lib/prb-test"]
+	path = apps/blockchain/lib/prb-test
+	url = https://github.com/paulrberg/prb-test
