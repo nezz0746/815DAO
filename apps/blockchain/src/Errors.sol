@@ -5,4 +5,5 @@ library Errors {
     error passengerNotOnFlightManifest();
     error ticketPriceNotMet();
     error bookerNotPassenger();
+    error alreadyClaimed();
 }
